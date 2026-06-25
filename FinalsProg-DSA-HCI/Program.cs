@@ -292,7 +292,7 @@ namespace FinalsProg_DSA_HCI
             {
                 Console.Clear();
                 Accountcreationdisplay();
-                Console.Write($"\n\n{pad}tWould you like to sign up? (Y/N) :");
+                Console.Write($"\n\n{pad}Would you like to sign up? (Y/N) :");
                 try
                 {
                     char signupchoice = char.ToUpper(Convert.ToChar(Console.ReadLine()));
@@ -412,7 +412,9 @@ namespace FinalsProg_DSA_HCI
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"{pad}\nInvalid input. Please type 1 to 6.");
+                    Console.ResetColor();
                     Console.WriteLine($"{pad}Press any key to try again...");
                     Console.ReadKey();
                     return 0;
@@ -420,7 +422,9 @@ namespace FinalsProg_DSA_HCI
             }
             catch (Exception)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{pad}\nInvalid input. Please type a valid number.");
+                Console.ResetColor();
                 Console.WriteLine($"{pad}Press any key to try again...");
                 Console.ReadKey();
                 return 0;
@@ -563,7 +567,9 @@ namespace FinalsProg_DSA_HCI
             }
             catch (Exception)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\nInvalid input. Expected a valid number entry.");
+                Console.ResetColor();
             }
 
             Console.WriteLine("\nPress any key to return to dashboard...");
@@ -749,7 +755,9 @@ namespace FinalsProg_DSA_HCI
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("\nInvalid option. Press any key to try again...");
+                    Console.ResetColor();
                     Console.ReadKey();
                 }
             }
@@ -1034,7 +1042,9 @@ namespace FinalsProg_DSA_HCI
 
                 if (choice < 1 || choice > userRequestIndexes.Count)
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("\nInvalid selection.");
+                    Console.ResetColor();
                     Console.ReadKey();
                     return;
                 }
@@ -1057,7 +1067,9 @@ namespace FinalsProg_DSA_HCI
             }
             catch (Exception)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("\nInvalid input. Expected a valid number entry.");
+                Console.ResetColor();
             }
 
             Console.WriteLine("\nPress any key to return...");
@@ -1065,10 +1077,9 @@ namespace FinalsProg_DSA_HCI
         }
     }
 }
-        
-   
 
 
-                
-           
-    
+
+
+
+
