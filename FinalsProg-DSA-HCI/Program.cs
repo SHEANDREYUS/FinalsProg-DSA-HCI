@@ -228,7 +228,7 @@ namespace FinalsProg_DSA_HCI
             Console.ReadKey();
             Console.Clear();
             return true;
-        }
+        }   
         static bool SignUpProcess()
         {
             Console.Clear();
@@ -424,7 +424,7 @@ namespace FinalsProg_DSA_HCI
             catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{pad}\nInvalid input. Please type a valid number.");
+                Console.WriteLine($"{pad}\nInvalid input. Please type a valid number from 1 to 8.");
                 Console.ResetColor();
                 Console.WriteLine($"{pad}Press any key to try again...");
                 Console.ReadKey();
@@ -618,12 +618,18 @@ namespace FinalsProg_DSA_HCI
             Console.WriteLine($"{Dpad}   =================================");
             Console.WriteLine($"{Dpad}       DONOR STATUS & RANKINGS      ");
             Console.WriteLine($"{Dpad}   =================================");
-
-            string currentPoints = userDatabase[currentLoggedInUser][1];
+            Console.WriteLine($" \n{Dpad}  Earn points by fulfilling requests ");
+                
+            string currentPoints = userDatabase[currentLoggedInUser][1];    
             Console.WriteLine($"{Dpad}╔══════════════════════════════════════╗");
             Console.WriteLine($"{Dpad}  Logged User: {currentLoggedInUser}");
-            Console.WriteLine($"{Dpad}  Your Score : {currentPoints} Points");
-            Console.WriteLine($"{Dpad}╚════════ LEADERBOARD RANKINGS ════════╝");
+            Console.Write($"\n{Dpad}  Your Points :");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($"{currentPoints} ");
+            
+            Console.ResetColor();
+            Console.WriteLine($"\n{Dpad}╚════════ LEADERBOARD RANKINGS ════════╝");
 
             //transfer for leaderboard
             var leaderboard = userDatabase.ToList();
@@ -707,7 +713,7 @@ namespace FinalsProg_DSA_HCI
                 Console.ResetColor();
                 Console.WriteLine($"\n{Dpad}   =================================");
                 Console.WriteLine($"{Dpad}          CREATE A NEW REQUEST        ");
-                Console.WriteLine($"{Dpad}   =================================");
+                Console.WriteLine($"{Dpad}   =================================");   
 
                 Console.WriteLine($"{Dpad}╔══════════════════════════════════════╗");
                 PrintWrapped($"1. Title: ", title, 30);
@@ -757,6 +763,7 @@ namespace FinalsProg_DSA_HCI
                             Console.ReadKey();
                             continue;
                         }
+                       
 
                         title = input;
                         break;
@@ -896,8 +903,9 @@ namespace FinalsProg_DSA_HCI
 
                     File.AppendAllText(RequestsFilePath, finalizedTicket.TrimEnd() + Environment.NewLine + "=========================" + Environment.NewLine);
 
-                    Console.WriteLine($"\n{Dpad}Your request has been saved successfully!");
-                    Console.WriteLine($"{Dpad}Press any key to return to menu...");
+                    Console.WriteLine($"\n{Dpad}Your request has been saved successfully and is now visible to other donors!");
+                    Console.WriteLine($"{Dpad}You'll get a notification when someone fulfills it.");
+                    Console.WriteLine($"{Dpad}Press any key to return to menu...");  
                     Console.ReadKey();
                     break;
                 }
@@ -1147,10 +1155,15 @@ namespace FinalsProg_DSA_HCI
             Console.WriteLine();
 
             // ACHIEVEMENTS SECTION HEADER
-            Console.ForegroundColor = ConsoleColor.Yellow;
+
             Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
-            Console.WriteLine($"{Dpad}║           ACHIEVEMENTS             ║");
-            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
+            Console.Write($"{Dpad}║");
+
+           Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("            ACHIEVEMENTS"); Console.ResetColor();
+            Console.Write("            ║");
+            Console.WriteLine($"\n{Dpad}╚════════════════════════════════════╝");
+
             Console.ResetColor();
 
             if (unlocked.Count == 0)
@@ -1170,11 +1183,14 @@ namespace FinalsProg_DSA_HCI
             Console.WriteLine();
 
             // RANK TIERS HEADER
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
-            Console.WriteLine($"{Dpad}║            RANK TIERS              ║");
-            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
-            Console.ResetColor();
+            Console.Write($"{Dpad}║");
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write("             RANK TIERS"); Console.ResetColor();
+
+            Console.Write("             ║");
+            Console.WriteLine($"\n{Dpad}╚════════════════════════════════════╝");
 
             Console.WriteLine($"{Dpad}Bronze Donor   - 0 Points");
             Console.WriteLine($"{Dpad}Silver Donor   - 50 Points");
@@ -1189,9 +1205,12 @@ namespace FinalsProg_DSA_HCI
             // FULL ACHIEVEMENT LIST
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
-            Console.WriteLine($"{Dpad}║        ALL ACHIEVEMENTS            ║");
-            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
-            Console.ResetColor();
+            Console.Write($"{Dpad}║");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("         ALL ACHIEVEMENTS"); Console.ResetColor();
+            Console.Write("           ║");
+            Console.WriteLine($"\n{Dpad}╚════════════════════════════════════╝");
 
             string[] achievements =
             {
