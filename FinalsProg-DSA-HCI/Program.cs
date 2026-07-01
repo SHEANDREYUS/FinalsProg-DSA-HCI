@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FinalsProg_DSA_HCI
 {
@@ -17,166 +18,106 @@ namespace FinalsProg_DSA_HCI
         static string AccomplishedFilePath = "accomplished.txt"; //for history
         static string ReadNotificationsFilePath = "readnotifications.txt"; //forlogin notifications
         static string pad = new string('\t', 11);
-        static string smallpad = new string('\t', 10);
-        static void logo()
-        {
-            string header = @"
-                                      @@@@@@@@@@@@                                    
-                               @@@@@@@@@@@@@@@@@@@@@@@@@@                              
-                           @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                          
-                        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                      
-                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    
-                   @@@@@@@@@@@@@@@                    @@@@@@@@@@@@@@@                  
-                 @@@@@@@@@@@@@                            @@@@@@@@@@@@@                
-               @@@@@@@@@@@@                                  @@@@@@@@@@@              
-              @@@@@@@@@@@                                      @@@@@@@@@@@            
-            @@@@@@@@@@@  @@@@@@@@@@@@@            @@@@@@@@@@@@   @@@@@@@@@@            
-           @@@@@@@@@@ @@@@@@@@@@@@@@@@@@@      @@@@@@@@@@@@@@@@@@  @@@@@@@@@          
-          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@ @@@@@@@@@          
-          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-         @@@@@@@@@@@@@@@@@@@@@@@                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        
-        @@@@@@@@@ @@@@@@@@@@@@@@  @@@  @@@ @@@@  @@@@@@@@@@@@@@@@@@@@@ @@@@@@@@        
-        @@@@@@@@  @@@@@@@@@@@@@@  @@@      @@@@  @@@@@@@@@@@@@@@@@@@@@  @@@@@@@@      
-       @@@@@@@@@ @@@@@@@@@@@@@@@  @@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@  @@@@@@@@      
-       @@@@@@@@  @@@@@@@@@@@@@@@  @@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@      
-       @@@@@@@@   @@@@@@     @@   @@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@   @@@@@@@@      
-       @@@@@@@@   @@@@@@ @@@  @@@@@    @@@@@@@@  @@@@@@@@@@@@@@@@@@@@@   @@@@@@@@      
-       @@@@@@@@   @@@@@@ @@@  @@  @@@@  @@@@@@@  @@@@@@@@@@@@@@@@@@@@    @@@@@@@@      
-       @@@@@@@@    @@@@@ @@@  @@@@@@ @@@@@@    @@@@@@@@@@@@@@@@@@@@@@    @@@@@@@@      
-       @@@@@@@@    @@@@@@   @@              @@@@@@@@@@@@@@@    @@@@@     @@@@@@@@      
-       @@@@@@@@     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@           @@@ @@@@    @@@@@@@@      
-        @@@@@@@@     @@@@@@@@@@@@@@@@@@@@@  @@@  @@@@@@@@@ @@@@ @@@     @@@@@@@@      
-        @@@@@@@@@     @@@@@@@@@@@@@@@@@@@@            @@@@ @@@@ @      @@@@@@@@@      
-         @@@@@@@@      @@@@@@@@@@@@@@@@@@@@     @@@@@@@        @      @@@@@@@@@        
-         @@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@@    @@@@@@@@@       @@@@@@@@        
-          @@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@        
-           @@@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@          
-            @@@@@@@@@@        @@@@@@@@@@@@@@@@@@@@@@@@@@@@        @@@@@@@@@            
-             @@@@@@@@@@@        @@@@@@@@@@@@@@@@@@@@@@@@        @@@@@@@@@@            
-               @@@@@@@@@@@        @@@@@@@@@@@@@@@@@@@@        @@@@@@@@@@@              
-                @@@@@@@@@@@@@       @@@@@@@@@@@@@@@@       @@@@@@@@@@@@                
-                  @@@@@@@@@@@@@@       @@@@@@@@@@      @@@@@@@@@@@@@@@                
-                    @@@@@@@@@@@@@@@@@@   @@@@@@   @@@@@@@@@@@@@@@@@@                  
-                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                      
-                          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                        
-                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@                            
-                                   @@@@@@@@@@@@@@@@@@                                  
-                                                                                       
+        static string Apad = new string('\t', 8);
+        static string Bpad = new string('\t', 7);
+        static string Cpad = new string('\t', 6);
+        static string Dpad = new string('\t', 5);
+        static string Epad = new string('\t', 4);
 
-            ";
-            Console.WriteLine(header);
-        }
         static void title()
         {
-            string asciiArt = @"
-                                                                            :@@@@@@*                                           :@@%          
-                                                                            =@@@@@@@@@:                                        +@@@          
-                                                                            =@@@  -#@@@.    ..          .        ..          . .@@    ..     
-                                                                            =@@@   =@@@#.@@@@@@@@ =@@@@@@@@+ :@@@@@@@# +@@@@@@=    *@@@@@.   
-                                                                            =@@@   +@@@*@@@- -#@@@=@@@ .*@@@=@@@  -%@@#+@@@ .     :%@@@#:    
-                                                                            =@@@. @@@@*=@@@=  #@@@=@@@  +@@@+@@@. .@@@*+@@@        .-*@@@@   
-                                                                            =@@@@@@@*   =@@@@@@@# =@@@  +@@@.+@@@@@@@= +@@@       =@@@@@@=        
-                                                                                    -@@@@@@@@:           __                               
-                                                                                    -@@@+=#@@@@          --                                 
-                                                                                    -@@@=  =@@@#.###-%@#:##*=##*   +##+  +@@%+              
-                                                                                    -@@@=  :%@@%+@@@@@@:*@@%=@@@# #@@%.@@@-=%@@-            
-                                                                                    -@@@=  *@@@=+@@@    *@@# =%@@%@@% *@@@@@@@@*            
-                                                                                    -@@@@@@@@@: +@@@    *@@#  -@@@@%  =@@@+.=@#             
-                                                                                    -@@@@@@=    +@@@    *@@#   -%@@    :*@@@@%. ";
+            string asciiArt = $@"
+{Dpad} _    _      _                            _                 
+{Dpad}| |  | |    | |                          | |                
+{Dpad}| |  | | ___| | ___ ___  _ __ ___   ___  | |_ ___           
+{Dpad}| |/\| |/ _ \ |/ __/ _ \| '_ ` _ \ / _ \ | __/ _ \          
+{Dpad}\  /\  /  __/ | (_| (_) | | | | | |  __/ | || (_) |         
+{Dpad} \/  \/ \___|_|\___\___/|_| |_| |_|\___|  \__\___/                 
+{Dpad}______                       _      ______      _           
+{Dpad}|  _  \                     ( )     |  _  \    (_)          
+{Dpad}| | | |___  _ __   ___  _ __|/ ___  | | | |_ __ ___   _____ 
+{Dpad}| | | / _ \| '_ \ / _ \| '__| / __| | | | | '__| \ \ / / _ \
+{Dpad}| |/ / (_) | | | | (_) | |    \__ \ | |/ /| |  | |\ V /  __/
+{Dpad}|___/ \___/|_| |_|\___/|_|    |___/ |___/ |_|  |_| \_/ \___| 
+{Dpad}════════════════════════════════════════════════════════════";
             Console.WriteLine(asciiArt);
 
         }
         static void logindisplay()
         {
-            string art = @"                                                                                                                                                                                                                                                                                                                   
-                                                                                                                
-                                                            .*@@@@:                                                  +@@@@:                                 
-                                                            :#@@@@:                                                 =%@@@@*                                 
-                                                            :#@@@@:                                                 .=#%*                                   
-                                                            :#@@@@:                                                                                         
-                                                            :#@@@@:            @@@@@@@@-       #@@@@@@+@@@@=         *@@@@   %@@@%=@@@@@@-                  
-                                                            :#@@@@:         *@@@@@@@@@@@@=  .%@@@@@@@@@@@@@=        :#@@@@  =@@@@@@@@@@@@@@                 
-                                                            :#@@@@:       .#@@@@%:.-+%@@@@#:#@@@@%:.-*%@@@@=        :#@@@@  =@@@@@= .-#@@@@*                
-                                                            :#@@@@:       =%@@@@     *@@@@@+@@@@@    .+@@@@=        :#@@@@  =@@@@#   .*@@@@*                
-                                                            :#@@@@:       =%@@@@=    *@@@@@+%@@@@:    *@@@@=        :#@@@@  =@@@@#   .*@@@@*                
-                                                            :#@@@@@@@@@@@@:*@@@@@@@@@@@@@@..*@@@@@@@@@@@@@@=        :#@@@@  =@@@@#   .*@@@@*                
-                                                            :#@@@@@@@@@@@@ .=%@@@@@@@@@@+   :*@@@@@@@@@@@@@=        :#@@@@  =@@@@#   .*@@@@*                
-                                                            .===========:     :=+*##*-        .=+###=:+@@@@=        .===:   :===.     -==-                  
-                                                                                              =%%:   =@@@@@.                                                
-                                                                                             *@@@@@@@@@@@@@=                                                 
-                                                                                              .=#@@@@@@@@@-                                                   
-                                                                                                   ...  ";
+            string art = $@"                                                                                                                                                                                                                                                                                                                   
+{Bpad}   _                 _       
+{Bpad}  | |               (_)      
+{Bpad}  | |     ___   __ _ _ _ __  
+{Bpad}  | |    / _ \ / _` | | '_ \ 
+{Bpad}  | |___| (_) | (_| | | | | |
+{Bpad}  \_____/\___/ \__, |_|_| |_|
+{Bpad}                __/ |        
+{Bpad}               |___/     
+
+{Bpad}  ═══════════════════════════";
             Console.WriteLine(art);
         }
         static void Accountcreationdisplay()
         {
-            string art = @"
-                                                                              *@@@                                                                
-                                                                             +@@@@%                                                    .@@@       
-                                                                            -@@@@@@#                                                   =@@@       
-                                                                           .@@@#+@@@.   *@@@@@- #@@@@@. #@@@@@@# =@@@  -%@@.+@@@@@@@@*+@@@@@@     
-                                                                           #@@@**@@@@.:@@@* . -@@@+ . -@@@*.=#@@@=@@@  -%@@.+@@@.:*@@@.=@@@.      
-                                                                          +@@@@@@@@@@@+@@@.   =@@@:   =@@@:  *@@@+@@@. -@@@.+@@@  +@@@ =@@@.      
-                                                                         -@@@=    =@@@#*@@@@@@:#@@@@@@-#@@@@@@@@--%@@@@@@@@ +@@@  +@@@ -@@@@%     
-                                                                        .***:     .***- :+%@%:  :+%@%:  :+#@@*    :=*%@@*   =**:  =**-  -*@%-     
-                                                                                                                                                    
-                                                                        -%@@@%=                                     =@=                        
-                                                                      -@@@@@@@@@.                              #%# .*@@@                        
-                                                                     #@@@*    .                               +@@@   .                          
-                                                                    =@@@*        +@@@%@@@ :@@@@@%.  *@@@@@@@@+@@@@@@=@@@  :%@@@@@* .#@@@@@@@%   
-                                                                    =@@@*        *@@@#++ #@@*.=@@@=@@@@=*@@@@-*@@@: +@@@ #@@@++@@@@:#@@@-+@@@#  
-                                                                    :#@@@#       *@@@   -@@@@%%%%%#@@@   +@@@ +@@@  +@@@-@@@+  -@@@*#@@+ .#@@#  
-                                                                     :*@@@@@@@@@-*@@@   :*@@@%*@@@=%@@@@@@@@@ +@@@@++@@@:*@@@@@@@@%.#@@+ .#@@#  
-                                                                       .=#@@@@%=.*@@*     =#@@@%=  :*@@@%*@@# .+@@@#+@@*  -#@@@@*. .#@%- .#@@+  ";
+            string art = $@"
+{Dpad}  ___                            _      
+{Dpad} / _ \                          | |     
+{Dpad}/ /_\ \ ___ ___ ___  _   _ _ __ | |_    
+{Dpad}|  _  |/ __/ __/ _ \| | | | '_ \| __|   
+{Dpad}| | | | (_| (_| (_) | |_| | | | | |_    
+{Dpad}\_| |_/\___\___\___/ \__,_|_| |_|\__|                                     
+{Dpad} _____                _   _             
+{Dpad}/  __ \              | | (_)            
+{Dpad}| /  \/_ __ ___  __ _| |_ _  ___  _ __  
+{Dpad}| |   | '__/ _ \/ _` | __| |/ _ \| '_ \ 
+{Dpad}| \__/\ | |  __/ (_| | |_| | (_) | | | |
+{Dpad} \____/_|  \___|\__,_|\__|_|\___/|_| |_|
+
+{Dpad} ═══════════════════════════════════════";
             Console.WriteLine(art);
         }
         static void Notification()
         {
-            string notifart = @"                                                                          
-                                                                                                    .-====-:                                 
-                                                                                                   .-======-.                                
-                                                                                                 .:-=:.  .:=-:.                              
-                                                                                              :-----:......:====-:.                          
-                                                                                           .:-----:....... .:--===-:.                        
-                                                                                          :---:...........      :-==-:.                      
-                                                                                        .:--.............         .:==-.                     
-                                                                                        .:-:............             :-=-.                    
-                                                                                       :-:...........                .-=:                    
-                                                                                      .--..........                   .=-.                   
-                                                                                      :=:.........                     -=:                   
-                                                                                      -=........                       .=-                   
-                                                                                      --.......                        .==                   
-                                                                                      ==.....                      .....==                   
-                                                                                      ==....                      ......==                   
-                                                                                      ==........                  ......==                   
-                                                                                      ==.........            ...........==                   
-                                                                                      =+................................+=                   
-                                                                                      ++.........................:.....:+=                   
-                                                                                     :*+................................+*:                  
-                                                                                    .-##-................................-**-.                
-                                                                                 .-*##*-..................................-*##*-.             
-                                                                               .=%%#+:....................................:+###=.            
-                                                                               .*#:..................::::::..................-#*.            
-                                                                               .+%#######*******==+*++++++++++==*****#########%+.            
-                                                                                :+##########****%@#%##########@@*****#########+:             
-                                                                                               .#@#----====--+@%.                            
-                                                                                                -@@@+.::::.+@@@=                             
-                                                                                                 +@@@@@@@@@@@@+                              
-                                                                                                  .+@@@@@@@@+.                               
-                                             ";
+            string notifart = $@"                                                                          
+{Bpad}                :--:                  
+{Bpad}             .------.                
+{Bpad}           .------------.             
+{Bpad}          :-------------=:            
+{Bpad}         ----------------=-           
+{Bpad}         ---------------===.          
+{Bpad}        .-------------=====.          
+{Bpad}        .==================.          
+{Bpad}        .==================.          
+{Bpad}        .==================.          
+{Bpad}        -==================-          
+{Bpad}     .-====================-.        
+{Bpad}     -========================-.      
+{Bpad}     .--------========--------.       
+{Bpad}              =++++++=                
+{Bpad}               .=++=.  ";
             Console.WriteLine(notifart);
         }
         static void Main(string[] args)
         {
             List<string> RequestListmaker = new List<string>();
+
             if (File.Exists(RequestsFilePath))
             {
+                RequestListmaker.Clear();
+
                 string[] savedTickets = File.ReadAllText(RequestsFilePath)
-                                            .Split(new string[] { " =========================\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    .Split(new string[] { "=========================" },
+                           StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (string ticket in savedTickets)
                 {
-                    RequestListmaker.Add(ticket.Trim() + "\n");
+                    string cleanTicket = ticket.Trim();
+
+                    if (!string.IsNullOrWhiteSpace(cleanTicket))
+                    {
+                        RequestListmaker.Add(cleanTicket);
+                    }
                 }
             }
 
@@ -220,27 +161,27 @@ namespace FinalsProg_DSA_HCI
                                 ExecuteDonation(RequestListmaker);
                                 break;
                             case 2:
-                                ExecuteViewStatus();
+                                 ExecuteViewRequests(RequestListmaker);
                                 break;
-                            case 3:
-                                ExecuteViewRequests(RequestListmaker);
+                            case 3: 
+                                ExecuteViewStatus();
                                 break;
                             case 4:
                                 ExecuteMakeRequest(RequestListmaker);
                                 break;
                             case 5:
-                                ExecuteViewAccomplishedRequests();
+                                DeleteRequests(RequestListmaker);
                                 break;
                             case 6:
                                 ExecuteProfile();
                                 break;
                             case 7:
-                                DeleteRequests(RequestListmaker);
+                                ExecuteViewAccomplishedRequests();
                                 break;
                             case 8:
                                 Console.WriteLine("\nLogging out... Returning to Authentication screen.");
-                                Console.ReadKey();
-                                currentLoggedInUser = ""; // reset tracker for consistency
+                                Thread.Sleep(2000);
+                                currentLoggedInUser = ""; // reset tracker
                                 userIsLoggedIn = false;
                                 break;
                             default:
@@ -255,44 +196,47 @@ namespace FinalsProg_DSA_HCI
         {
             Console.Clear();
             title();
-
-            Console.Write($"\n\n{smallpad} ---->  Do you have an account? (Y/N): ");
+            Console.Write(
+                          $"\n{Dpad}    Where you can give to those in need.");
+                         
+            Console.Write($"\n\n{Dpad} ---->  Do you have an account? (Y/N): ");
             try
             {
                 char hasAccount = char.ToUpper(Convert.ToChar(Console.ReadLine()));
 
                 if (hasAccount == 'Y')
                 {
-                    if (LoginProcess())
-                    {
-                        return false;
-                    }
+                    return !LoginProcess();
                 }
                 else if (hasAccount == 'N')
                 {
-                    SignUpProcess();
-                    return true;
+                    if (SignUpProcess())
+                    {
+                        return false;
+                    }
+
+                    return true; // User cancelled signup
                 }
 
-                Console.WriteLine($"\n{pad}Invalid input. Please type Y or N.");
+                Console.WriteLine($"\n{Bpad}Invalid input. Please type Y or N.");
             }
             catch (Exception)
             {
-                Console.WriteLine($"\n {pad}Invalid input. Please type exactly one character.");
+                Console.WriteLine($"\n {Bpad}Invalid input. Please type exactly one character.");
             }
-            Console.WriteLine($"{pad}Press any key to try again...");
+            Console.WriteLine($"{Bpad}Press any key to try again...");
             Console.ReadKey();
             Console.Clear();
             return true;
         }
-        static void SignUpProcess()
+        static bool SignUpProcess()
         {
             Console.Clear();
             while (true)
             {
                 Console.Clear();
                 Accountcreationdisplay();
-                Console.Write($"\n\n{pad}Would you like to sign up? (Y/N) :");
+                Console.Write($"\n{Dpad} Would you like to sign up? (Y/N) :");
                 try
                 {
                     char signupchoice = char.ToUpper(Convert.ToChar(Console.ReadLine()));
@@ -307,40 +251,66 @@ namespace FinalsProg_DSA_HCI
                         Environment.Exit(0);
                     }
 
-                    Console.WriteLine($"\n\n{pad}Invalid input. Please type Y or N.");
+                    Console.WriteLine($"\n{Bpad} Invalid input. Please type Y or N.");
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine($"\n\n{pad}Invalid input. Please type exactly one character.");
+                    Console.WriteLine($"\n{Bpad} Invalid input. Please type exactly one character.");
                 }
-                Console.WriteLine("$\n\n{pad}Press any key to try again...");
+                Console.WriteLine($"\n{Bpad} Press any key to try again...");
                 Console.ReadKey();
             }
             while (true)
             {
                 Console.Clear();
                 Accountcreationdisplay();
-                Console.WriteLine($"\n\n{pad}[Creating New Account]");
-                Console.Write($"\n\n{pad}Enter Username: ");
-                string user = Console.ReadLine()?.Trim();
+                Console.WriteLine($"\n{Dpad}Welcome to Donor's Drive!" +
+                                  $"\r\n{Dpad}Let’s get you set up. Creating an account allows " +
+                                  $"\r\n{Dpad}you to post requests, fulfill donations, and earn ");
 
-                Console.Write($"\n\n{pad}Enter Password: ");
-                string pass = Console.ReadLine()?.Trim();
+                Console.WriteLine($"\n\n{Dpad}[Creating New Account]");
+                Console.WriteLine($"\r\n{Dpad}Caution: Username and Password are Case Sensitive and don't use of commas\n{Dpad}Press 'x' to return");
+                Console.Write($"\n{Dpad}Enter Username: ");
+                string user = Console.ReadLine()?.Trim() ?? "";
+
+                if (user.ToUpper() == "X")
+                {
+                    Console.WriteLine($"\n{Dpad}Returning to main menu...");
+                    Thread.Sleep(2000);
+                    return false; // Return to the main menu
+                }
+
+                Console.Write($"\n\n{Dpad}Enter Password: ");
+                string pass = ReadPassword();
+                if (pass.ToUpper() == "X")
+                {
+                    Console.WriteLine($"\n{Dpad}Cancelling account creation. Returning to main menu...");
+                    Thread.Sleep(2000);
+                    return false; // Return to the main menu
+                }
 
                 if (userDatabase.ContainsKey(user) || string.IsNullOrEmpty(user))
                 {
-                    Console.WriteLine($"\n\n{pad} Username invalid or already exists. Press any key to try again.");
+                    Console.WriteLine($"\n\n{Dpad} Username invalid or already exists. Press any key to try again.");
                     Console.ReadKey();
                     continue;
                 }
-
+                if (string.IsNullOrEmpty(pass))
+                {
+                    Console.WriteLine($"\n\n{Dpad} Password invalid. Press any key to try again.");
+                    Console.ReadKey();
+                    continue;
+                }
                 userDatabase.Add(user, new string[] { pass, "0" });
                 File.AppendAllText(DatabaseFilePath, $"{user},{pass},0\n");
 
-                Console.WriteLine($"\n\n{pad}Registration Successful! Press any key to continue");
-                Console.ReadKey();
-                Console.Clear();
-                return;
+                currentLoggedInUser = user;
+
+                Console.WriteLine($"\n\n{Dpad}Registration Successful!");
+                Console.WriteLine($"{Dpad}Logging you in...");
+                Thread.Sleep(2000);
+
+                return true;
             }
         }
         static bool LoginProcess()
@@ -349,16 +319,35 @@ namespace FinalsProg_DSA_HCI
             while (true)
             {
                 logindisplay();
-                Console.WriteLine($"\n\n{pad}[Login Session]");
-                Console.Write($"\n\n{pad}Enter Username: ");
-                string user = Console.ReadLine().Trim();
+                Console.WriteLine($"\n{Bpad}Ready to make a difference today?" +
+                                  $"\r\n{Bpad}Log in to view active requests and connect" +
+                                  $"\r\n{Bpad}with your community.");
 
-                Console.Write($"\n\n{pad}Enter Password: ");
-                string pass = Console.ReadLine().Trim();
+                Console.WriteLine($"\n\n{Bpad}[Login Session]");
+                Console.WriteLine($"\r\n{Bpad}Caution: Username and Password are Case Sensitive\n{Bpad}Press 'x' to return");
+                Console.Write($"\n{Bpad}Enter Username: ");
+                string user = Console.ReadLine()?.Trim() ?? "";
+
+                if (user.ToUpper() == "X")
+                {
+                    Console.WriteLine($"\n{Bpad}Returning to main menu...");
+                    Thread.Sleep(2000);
+                    return false; // Return to the main menu
+                }
+
+                Console.Write($"\n\n{Bpad}Enter Password: ");
+                string pass = ReadPassword();
+
+                if (pass.ToUpper() == "X")
+                {
+                    Console.WriteLine($"\n{Bpad}Returning to main menu...");
+                    Thread.Sleep(2000);
+                    return false;
+                }
 
                 if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(pass))
                 {
-                    Console.WriteLine($"\n\n{smallpad}Fields cannot be empty. Press any key to try again.");
+                    Console.WriteLine($"\n\n{Bpad}Fields cannot be empty. Press any key to try again.");
                     Console.ReadKey();
                     Console.Clear();
                     continue;
@@ -367,13 +356,13 @@ namespace FinalsProg_DSA_HCI
                 if (userDatabase.ContainsKey(user) && userDatabase[user][0] == pass)
                 {
                     currentLoggedInUser = user;
-                    Console.WriteLine($"\n\n{smallpad}Login Successful! Redirecting to main dashboard...");
+                    Console.WriteLine($"\n\n{Bpad}Login Successful! Redirecting to main dashboard...");
                     Console.ReadKey();
                     return true;
                 }
                 else
                 {
-                    Console.WriteLine($"\n\n{smallpad}[ Invalid Details ] Press any key to try again.");
+                    Console.WriteLine($"\n\n{Bpad}[ Invalid Details ] Press any key to try again.");
                     Console.ReadKey();
                     Console.Clear();
                     continue;
@@ -383,37 +372,49 @@ namespace FinalsProg_DSA_HCI
         static int DisplayMenu()
         {
             Console.Clear();
-            Console.WriteLine(@" 
-                                    ________      ______    _____  ___      ______     _______    ____  ________      ________    _______    __  ___      ___  _______  
-                                    |""      ""\    /    "" \  (\""   \|""  \    /    "" \   /""      \  ))_ "")/""       )    |""      ""\  /""      \  |"" \|""  \    /""  |/""     ""| 
-                                    (.  ___  :)  // ____  \ |.\\   \    |  // ____  \ |:        |(____((:   \___/     (.  ___  :)|:        | ||  |\   \  //  /(: ______) 
-                                    |: \   ) || /  /    ) :)|: \.   \\  | /  /    ) :)|_____/   )       \___  \       |: \   ) |||_____/   ) |:  | \\  \/. ./  \/    |   
-                                    (| (___\ ||(: (____/ // |.  \    \. |(: (____/ //  //      /         __/  \\      (| (___\ || //      /  |.  |  \.    //   // ___)_  
-                                    |:       :) \        /  |    \    \ | \        /  |:  __   \        /"" \   :)     |:       :)|:  __   \  /\  |\  \\   /   (:      ""| 
-                                    (________/   \""_____/    \___|\____\)  \""_____/   |__|  \___)      (_______/      (________/ |__|  \___)(__\_|_)  \__/     \_______) 
-                                                                                                                                     ");
-            Console.WriteLine($"{pad}Logged in as: {currentLoggedInUser}\n");
+            
+            Console.Write($"\n{Cpad}User: {currentLoggedInUser} |");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($" Points: {userDatabase[currentLoggedInUser][1]}");
+            Console.ResetColor();
 
-            Console.WriteLine($"{pad}[1] Donate\n");
-            Console.WriteLine($"{pad}[2] View Status & Ranking\n");
-            Console.WriteLine($"{pad}[3] View Requests\n");
-            Console.WriteLine($"{pad}[4] Make a Request\n");
-            Console.WriteLine($"{pad}[5] View Completed Requests\n");
-            Console.WriteLine($"{pad}[6] View Profile\n");
-            Console.WriteLine($"{pad}[7] Delete Request\n");
-            Console.WriteLine($"{pad}[8]  Log Out\n");
+            Console.WriteLine($"\n{Dpad}Input from 1-8 to choose your destination");
+
+            Console.WriteLine($"{Dpad}╔══════════════════════════════════════╗");
+            Console.WriteLine($"{Dpad}║              MAIN MENU               ║");
+            Console.WriteLine($"{Dpad}╚══════════════════════════════════════╝");
+            Console.WriteLine($"{Dpad}   ╔══════════ B R O W S E ═════════╗");
+            Console.WriteLine($"{Dpad}   ║                                ║");
+            Console.WriteLine($"{Dpad}   ║  [1] Donate                    ║");
+            Console.WriteLine($"{Dpad}   ║  [2] View other requests       ║");
+            Console.WriteLine($"{Dpad}   ║  [3] View Status & Ranking     ║");
+            Console.WriteLine($"{Dpad}   ║                                ║");
+            Console.WriteLine($"{Dpad}   ╠════════════ P O S T ═══════════╣");
+            Console.WriteLine($"{Dpad}   ║                                ║");      
+            Console.WriteLine($"{Dpad}   ║  [4] Make Request              ║");
+            Console.WriteLine($"{Dpad}   ║  [5] Delete Request            ║");
+            Console.WriteLine($"{Dpad}   ║                                ║");
+            Console.WriteLine($"{Dpad}   ╠═════════════ Y O U ════════════╣");
+            Console.WriteLine($"{Dpad}   ║                                ║");
+            Console.WriteLine($"{Dpad}   ║  [6] Profile                   ║");
+            Console.WriteLine($"{Dpad}   ║  [7] Completed by History      ║");
+            Console.WriteLine($"{Dpad}   ║  [8] Logout                    ║");
+            Console.WriteLine($"{Dpad}   ║                                ║");
+            Console.WriteLine($"{Dpad}   ╚════════════════════════════════╝");
+         
+            Console.Write($"\n{Dpad}Your input:");
             try
             {
                 int choice = Convert.ToInt32(Console.ReadLine());
 
-                if (choice >= 1 && choice <= 9)
+                if (choice >= 1 && choice <= 8)
                 {
                     return choice;
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"{pad}\nInvalid input. Please type 1 to 6.");
+                    Console.WriteLine($"{pad}\nInvalid input. Please type 1 to 8.");
                     Console.ResetColor();
                     Console.WriteLine($"{pad}Press any key to try again...");
                     Console.ReadKey();
@@ -433,25 +434,36 @@ namespace FinalsProg_DSA_HCI
         static void ExecuteDonation(List<string> RequestListmaker)
         {
             Console.Clear();
-            Console.WriteLine("=================================");
-            Console.WriteLine("       FULFILL A REQUEST         ");
-            Console.WriteLine("=================================");
+            Console.Write($"\n{Cpad}User: {currentLoggedInUser} |");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($" Points: {userDatabase[currentLoggedInUser][1]}");
+            Console.ResetColor();
+            Console.WriteLine($"\n {Dpad}   =================================");
+            Console.WriteLine($"{Dpad}         FULFILL A REQUEST         ");
+            Console.WriteLine($"{Dpad}   =================================");
 
             if (RequestListmaker.Count == 0)
             {
-                Console.WriteLine("\nThere are no active help requests to fulfill right now.");
-                Console.WriteLine("\nPress any key to return to dashboard...");
+                Console.WriteLine($"\n{Dpad}There are no active help requests to fulfill right now.");
+                Console.WriteLine($"\n{Dpad}Press any key to return to dashboard...");
                 Console.ReadKey();
                 return;
             }
 
             for (int i = 0; i < RequestListmaker.Count; i++)
             {
-                Console.WriteLine($"--- Request #{i + 1} ---");
-                Console.WriteLine(RequestListmaker[i]);
+                string cleanRequest = RequestListmaker[i].Replace("=========================", "").Trim();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"{Dpad}╔═══════════════════════════════════════╗");
+                Console.WriteLine($"{Dpad}  REQUEST #{i + 1,-33}");
+                Console.WriteLine($"{Dpad}╠═══════════════════════════════════════╣");
+                PrintRequest(cleanRequest);
+                Console.WriteLine($"{Dpad}╚═══════════════════════════════════════╝");
+                Console.WriteLine();
+                Console.ResetColor();
             }
 
-            Console.Write("Enter the number of the request you want to fulfill (or 0 to cancel): ");
+            Console.Write($"{Dpad}Enter the number of the request you want to fulfill (or 0 to cancel): ");
             try
             {
                 int choice = Convert.ToInt32(Console.ReadLine());
@@ -466,23 +478,46 @@ namespace FinalsProg_DSA_HCI
                 {
                     string selectedTicket = RequestListmaker[targetIndex];
                     string originalRequester = "Someone";
+
                     string[] ticketLines = selectedTicket.Split('\n');
-                    if (ticketLines.Length > 0 && ticketLines[0].Contains("Posted by:"))
+
+                    foreach (string line in ticketLines)
                     {
-                        originalRequester = ticketLines[0].Replace("Posted by:", "").Trim();
+                        if (line.StartsWith("Posted by:"))
+                        {
+                            originalRequester = line.Replace("Posted by:", "").Trim();
+                            break;
+                        }
                     }
 
                     if (originalRequester == currentLoggedInUser)
                     {
-                        Console.WriteLine("\nYou cannot fulfill your own request.");
-                        Console.WriteLine("Press any key to return...");
+                        Console.WriteLine($"\n{Dpad}You cannot fulfill your own request.");
+                        Console.WriteLine($"{Dpad}Press any key to return...");
                         Console.ReadKey();
                         return;
                     }
 
-                    //adds it to accomplished
-                    Console.Write("Leave a message: ");
-                    string message = Console.ReadLine();
+                    // Confirmation before fulfilling
+                    Console.Write($"\n{Dpad}Are you sure you want to fulfill this request? (Y/N): ");
+                    string confirm = Console.ReadLine()?.Trim().ToUpper();
+
+                    if (confirm != "Y")
+                    {
+                        Console.WriteLine($"{Dpad}Fulfillment cancelled.");
+                        Console.WriteLine($"{Dpad}Press any key to return...");
+                        Console.ReadKey();
+                        return;
+                    }
+
+                    // Leave a message
+                    Console.Write($"{Dpad}Leave a message (optional): ");
+                    string message = Console.ReadLine()?.Trim();
+
+                    if (string.IsNullOrWhiteSpace(message))
+                    {
+                        message = "No message.";
+                    }
 
                     File.AppendAllText(AccomplishedFilePath,
                         $"{originalRequester}|{currentLoggedInUser}|Donation Pack|Completed|{message}\n");
@@ -509,55 +544,55 @@ namespace FinalsProg_DSA_HCI
                         File.AppendAllText(DatabaseFilePath, $"{entry.Key},{entry.Value[0]},{entry.Value[1]}\n");
                     }
 
-                    Console.WriteLine("\nThank you for donating! You completed the request.");
-                    Console.WriteLine("You gained +10 points! Check rankings to see your spot.\n");
+                    Console.WriteLine($"\n{Dpad}Thank you for donating! You completed the request.");
+                    Console.WriteLine($"{Dpad}You gained +10 points! you now have {currentPoints}. Check rankings to see your spot.\n");
                     if (currentPoints == 10)
                     {
-                        Console.WriteLine("Achievement Unlocked: First Donation!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: First Donation!");
                     }
                     else if (currentPoints == 50)
                     {
-                        Console.WriteLine("Achievement Unlocked: Helping Hand!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: Helping Hand!");
                     }
                     else if (currentPoints == 80)
                     {
-                        Console.WriteLine("Achievement Unlocked: Fellow Volunteers!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: Fellow Volunteers!");
                     }
                     else if (currentPoints == 100)
                     {
-                        Console.WriteLine("Achievement Unlocked: Community Helper!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: Community Helper!");
                     }
                     else if (currentPoints == 200)
                     {
-                        Console.WriteLine("Achievement Unlocked: Contributor to the Need!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: Contributor to the Need!");
                     }
                     else if (currentPoints == 300)
                     {
-                        Console.WriteLine("Achievement Unlocked: The Benefactor!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: The Benefactor!");
                     }
                     else if (currentPoints == 400)
                     {
-                        Console.WriteLine("Achievement Unlocked: A Patron to Society!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: A Patron to Society!");
                     }
                     else if (currentPoints == 500)
                     {
-                        Console.WriteLine("Achievement Unlocked: The Philanthropist!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: The Philanthropist!");
                     }
                     else if (currentPoints == 650)
                     {
-                        Console.WriteLine("Achievement Unlocked: The Altruistic Friend!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: The Altruistic Friend!");
                     }
                     else if (currentPoints == 800)
                     {
-                        Console.WriteLine("Achievement Unlocked: The Helping Champion!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: The Helping Champion!");
                     }
                     else if (currentPoints == 1000)
                     {
-                        Console.WriteLine("Achievement Unlocked: Mr Beast!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: Mr Beast!");
                     }
                     else if (currentPoints == 1500)
                     {
-                        Console.WriteLine("Achievement Unlocked: Greatest of All Time!");
+                        Console.WriteLine($"{Dpad}Achievement Unlocked: Greatest of All Time!");
                     }
                 }
                 else
@@ -568,11 +603,11 @@ namespace FinalsProg_DSA_HCI
             catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nInvalid input. Expected a valid number entry.");
+                Console.WriteLine($"\n{Dpad}Invalid input. Expected a valid number entry.");
                 Console.ResetColor();
             }
 
-            Console.WriteLine("\nPress any key to return to dashboard...");
+            Console.WriteLine($"\n{Dpad}Press any key to return to dashboard...");
             Console.ReadKey();
         }
         static void ExecuteViewStatus()
@@ -580,16 +615,15 @@ namespace FinalsProg_DSA_HCI
             int points = int.Parse(userDatabase[currentLoggedInUser][1]);
 
             Console.Clear();
-            Console.WriteLine("=================================");
-            Console.WriteLine("    DONOR STATUS & RANKINGS      ");
-            Console.WriteLine("=================================");
+            Console.WriteLine($"{Dpad}   =================================");
+            Console.WriteLine($"{Dpad}       DONOR STATUS & RANKINGS      ");
+            Console.WriteLine($"{Dpad}   =================================");
 
             string currentPoints = userDatabase[currentLoggedInUser][1];
-            Console.WriteLine($"Logged User: {currentLoggedInUser}");
-            Console.WriteLine($"Your Score : {currentPoints} Points\n");
-
-
-            Console.WriteLine("--- LEADERBOARD RANKINGS ---");
+            Console.WriteLine($"{Dpad}╔══════════════════════════════════════╗");
+            Console.WriteLine($"{Dpad}  Logged User: {currentLoggedInUser}");
+            Console.WriteLine($"{Dpad}  Your Score : {currentPoints} Points");
+            Console.WriteLine($"{Dpad}╚════════ LEADERBOARD RANKINGS ════════╝");
 
             //transfer for leaderboard
             var leaderboard = userDatabase.ToList();
@@ -616,39 +650,49 @@ namespace FinalsProg_DSA_HCI
             {
                 int points2 = int.Parse(player.Value[1]);
 
-                Console.WriteLine(
-                    $"{rank}. {player.Key,-12} : {points} pts | {Rankings(points)}"
-                );
+                Console.WriteLine($"{Dpad}{rank}. {player.Key,-12} : {points2} pts | {Rankings(points2)}");
 
                 rank++;
             }
-            Console.WriteLine("=================================");
+            Console.WriteLine($"{Dpad}════════════════════════════════════════");
 
-            Console.WriteLine("\nPress any key to return to dashboard...");
+            Console.WriteLine($"\n{Dpad}Press any key to return to dashboard...");
             Console.ReadKey();
         }
-        static void ExecuteViewRequests(List<string> Requestlistmaker)
+        static void ExecuteViewRequests(List<string> RequestListmaker)
         {
             Console.Clear();
-            Console.WriteLine("=================================");
-            Console.WriteLine("       ACTIVE REQUESTS           ");
-            Console.WriteLine("=================================");
+            Console.Write($"\n{Cpad}User: {currentLoggedInUser} |");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($" Points: {userDatabase[currentLoggedInUser][1]}");
+            Console.ResetColor();
+            Console.WriteLine($"\n{Dpad}   =================================");
+            Console.WriteLine($"{Dpad}            ACTIVE REQUESTS           ");
+            Console.WriteLine($"{Dpad}   =================================");
 
-            if (Requestlistmaker.Count == 0)
+            if (RequestListmaker.Count == 0)
             {
-                Console.WriteLine("\nNo active requests found at this time.");
+                Console.WriteLine($"\n{Dpad}No active requests found at this time.");
             }
             else
             {
-                Console.WriteLine($"Found ({Requestlistmaker.Count}) Active Request(s):\n");
-                for (int i = 0; i < Requestlistmaker.Count; i++)
+                for (int i = 0; i < RequestListmaker.Count; i++)
                 {
-                    Console.WriteLine($"{i + 1}. {Requestlistmaker[i]}");
+                    string cleanRequest = RequestListmaker[i].Replace("=========================", "").Trim();
+
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"{Dpad}╔═══════════════════════════════════════╗");
+                    Console.WriteLine($"{Dpad}REQUEST #{i + 1}");
+                    Console.WriteLine($"{Dpad}╠═══════════════════════════════════════╣");
+                    PrintRequest(cleanRequest);
+                    Console.WriteLine($"{Dpad}╚═══════════════════════════════════════╝");
+                    Console.WriteLine();
+                    Console.ResetColor();
                 }
             }
             Console.ReadKey();
         }
-        static void ExecuteMakeRequest(List<string> Requestlistmaker)
+        static void ExecuteMakeRequest(List<string> RequestListmaker)
         {
             string title = "";
             string description = "";
@@ -657,13 +701,18 @@ namespace FinalsProg_DSA_HCI
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("=================================");
-                Console.WriteLine("     CREATE A NEW REQUEST        ");
-                Console.WriteLine("=================================");
-                Console.WriteLine($"1. Title: {title}");
-                Console.WriteLine($"2. Description: {description}");
+                Console.Write($"\n{Cpad}User: {currentLoggedInUser} |");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write($" Points: {userDatabase[currentLoggedInUser][1]}");
+                Console.ResetColor();
+                Console.WriteLine($"\n{Dpad}   =================================");
+                Console.WriteLine($"{Dpad}          CREATE A NEW REQUEST        ");
+                Console.WriteLine($"{Dpad}   =================================");
 
-                Console.Write("3. Items Needed: ");
+                Console.WriteLine($"{Dpad}╔══════════════════════════════════════╗");
+                PrintWrapped($"1. Title: ", title, 30);
+                PrintWrapped($"2. Description: ", description, 30);
+                Console.Write($"{Dpad}3. Items Needed: ");
                 if (itemsList.Count == 0)
                 {
                     Console.WriteLine("[None Added]");
@@ -673,55 +722,159 @@ namespace FinalsProg_DSA_HCI
                     Console.WriteLine();
                     for (int i = 0; i < itemsList.Count; i++)
                     {
-                        Console.WriteLine($"   {i + 1}. {itemsList[i]}");
+                        PrintWrapped($"{i + 1}. ", itemsList[i], 30);
                     }
                 }
-                Console.WriteLine("---------------------------------");
-                Console.WriteLine("4. Submit and Save Request");
-                Console.WriteLine("5. Cancel and Exit");
-                Console.WriteLine("---------------------------------");
-                Console.Write("Select an option (1-5): ");
+                Console.WriteLine($"{Dpad}╠══════════════════════════════════════╣");
+                Console.WriteLine($"{Dpad}║ [4] Submit Request                   ║");
+                Console.WriteLine($"{Dpad}║ [5] Cancel                           ║");
+                Console.WriteLine($"{Dpad}╚══════════════════════════════════════╝");
+                Console.Write($"{Dpad}Select an option (1-5): ");
 
                 string choice = Console.ReadLine()?.Trim();
 
                 if (choice == "1")
                 {
-                    Console.Write("\nEnter Title: ");
-                    string input = Console.ReadLine()?.Trim();
-                    if (!string.IsNullOrEmpty(input)) title = input;
+                    while (true)
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"{Dpad}   =================================");
+                        Console.WriteLine($"{Dpad}            CREATE A TITLE          ");
+                        Console.WriteLine($"{Dpad}   =================================");
+                        Console.Write($"\n{Epad}Enter Title (Max 50 characters): ");
+                        string input = Console.ReadLine()?.Trim();
+
+                        if (string.IsNullOrWhiteSpace(input))
+                        {
+                            Console.WriteLine($"{Epad}Title cannot be empty.");
+                            Console.ReadKey();
+                            continue;
+                        }
+
+                        if (input.Length > 50)
+                        {
+                            Console.WriteLine($"{Epad}Title is too long! ({input.Length}/50)");
+                            Console.ReadKey();
+                            continue;
+                        }
+
+                        title = input;
+                        break;
+                    }
                 }
                 else if (choice == "2")
                 {
-                    Console.Write("\nEnter Description: ");
-                    string input = Console.ReadLine()?.Trim();
-                    if (!string.IsNullOrEmpty(input)) description = input;
+                    while (true)
+                    {
+                        Console.Clear();
+
+                        Console.WriteLine($"{Dpad}   =================================");
+                        Console.WriteLine($"{Dpad}         CREATE A DESCRIPTION       ");
+                        Console.WriteLine($"{Dpad}   =================================");
+
+                        Console.Write($"\n{Epad}Enter Description (Max 300 characters): ");
+                        string input = Console.ReadLine()?.Trim();
+
+                        if (string.IsNullOrWhiteSpace(input))
+                        {
+                            Console.WriteLine($"{Epad}Description cannot be empty.");
+                            Console.WriteLine($"{Epad}Press any key to try again...");
+                            Console.ReadKey();
+                            continue;
+                        }
+                        if (input.Length > 300)
+                        {
+                            Console.WriteLine($"{Epad}Description is too long! ({input.Length}/300 characters)");
+                            Console.WriteLine($"{Epad}Press any key to try again...");
+                            Console.ReadKey();
+                            continue;
+                        }
+                        description = input;
+                        break;
+                    }
                 }
                 else if (choice == "3")
                 {
                     itemsList.Clear();
-                    Console.WriteLine("\nEnter items sequentially. Press [Enter] after each item.");
-                    Console.WriteLine("Type 'X' and press [Enter] when finished.\n");
+                    Console.Clear();
+                    Console.WriteLine($"{Dpad}   =================================");
+                    Console.WriteLine($"{Dpad}             CREATE A LIST          ");
+                    Console.WriteLine($"{Dpad}   =================================");
+                    Console.WriteLine($"\n{Epad}Enter items sequentially. Press [Enter] after each item.");
+                    Console.WriteLine($"{Epad}Type 'X' and press [Enter] when finished.\n");
 
                     int itemCounter = 1;
                     while (true)
                     {
-                        Console.Write($"{itemCounter}. ");
+                        Console.Write($"{Epad}{itemCounter}. ");
                         string itemInput = Console.ReadLine()?.Trim();
 
-                        if (string.Equals(itemInput.ToUpper(), "X"))
+                        if (string.Equals(itemInput, "X", StringComparison.OrdinalIgnoreCase))
                         {
                             break;
                         }
 
-                        if (!string.IsNullOrEmpty(itemInput))
+                        if (string.IsNullOrWhiteSpace(itemInput))
+                        {
+                            Console.WriteLine($"{Epad}Item cannot be empty.");
+                            Console.WriteLine($"{Epad}Press any key to try again...");
+                            Console.ReadKey();
+                            continue;
+                        }
+                        if (itemInput.Length > 50)
+                        {
+                            Console.WriteLine($"{Epad}Item is too long! ({itemInput.Length}/50 characters)");
+                            Console.WriteLine($"{Epad}Press any key to try again...");
+                            Console.ReadKey();
+                            continue;
+                        }
+                        if (itemsList.Count > 20)
+                        {
+                            Console.WriteLine($"{Epad}Item list is too long! ({itemInput.Length}/20 items)");
+                            Console.WriteLine($"{Epad}Press any key to try again...");
+                            Console.ReadKey();
+                            continue;
+                        }
+                        else
                         {
                             itemsList.Add(itemInput);
                             itemCounter++;
+                            continue;
                         }
                     }
                 }
                 else if (choice == "4")
                 {
+                    if (string.IsNullOrWhiteSpace(title))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{Dpad}Title cannot be empty!");
+                        Console.ResetColor();
+                        Console.WriteLine($"{Dpad}Press any key to continue...");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(description))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{Dpad}Description cannot be empty!");
+                        Console.ResetColor();
+                        Console.WriteLine($"{Dpad}Press any key to continue...");
+                        Console.ReadKey();
+                        continue;
+                    }
+
+                    if (itemsList.Count == 0)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{Dpad}Please add at least one item.");
+                        Console.ResetColor();
+                        Console.WriteLine($"{Dpad}Press any key to continue...");
+                        Console.ReadKey();
+                        continue;
+                    }
+
                     string finalizedTicket = "Posted by: " + currentLoggedInUser + "\n" +
                                              "Title: " + title + "\n" +
                                              "Description: " + description + "\n" +
@@ -739,13 +892,12 @@ namespace FinalsProg_DSA_HCI
                         }
                     }
 
-                    Requestlistmaker.Add(finalizedTicket);
+                    RequestListmaker.Add(finalizedTicket);
 
-                    string filePayload = finalizedTicket + "=========================\n";
-                    File.AppendAllText(RequestsFilePath, filePayload);
+                    File.AppendAllText(RequestsFilePath, finalizedTicket.TrimEnd() + Environment.NewLine + "=========================" + Environment.NewLine);
 
-                    Console.WriteLine("\nYour request has been saved successfully!");
-                    Console.WriteLine("Press any key to return to menu...");
+                    Console.WriteLine($"\n{Dpad}Your request has been saved successfully!");
+                    Console.WriteLine($"{Dpad}Press any key to return to menu...");
                     Console.ReadKey();
                     break;
                 }
@@ -756,7 +908,7 @@ namespace FinalsProg_DSA_HCI
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("\nInvalid option. Press any key to try again...");
+                    Console.WriteLine($"\n{Dpad}Invalid option. Press any key to try again...");
                     Console.ResetColor();
                     Console.ReadKey();
                 }
@@ -790,20 +942,36 @@ namespace FinalsProg_DSA_HCI
             }
 
             Notification();
-
+            Console.WriteLine();
             if (unreadCount > 0)
             {
-                Console.WriteLine($"{pad}[NOTIFICATION] You have {unreadCount} new completed request(s).");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"{Bpad}     [NOTIFICATION] You have {unreadCount} new completed request(s).");
             }
             else
             {
-                Console.WriteLine($"{pad}[NOTIFICATION] No new updates.");
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"{Bpad}     [NOTIFICATION] No new updates.");
             }
+            Console.ResetColor();
+            Console.WriteLine($"{Bpad}       Press any key to continue");
         }
         static void ExecuteViewAccomplishedRequests()
         {
             Console.Clear();
-            Console.WriteLine("=== YOUR ACCOMPLISHED REQUESTS ===");
+            Console.Write($"\n{Cpad}User: {currentLoggedInUser} |");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($" Points: {userDatabase[currentLoggedInUser][1]}");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"{Dpad}========================================");
+            Console.WriteLine($"{Dpad}        Completed by History            ");
+            Console.WriteLine($"{Dpad}========================================");
+            Console.ResetColor();
+            Console.WriteLine();
+
+            bool hasRequests = false;
 
             if (File.Exists(AccomplishedFilePath))
             {
@@ -811,39 +979,52 @@ namespace FinalsProg_DSA_HCI
                 {
                     string[] parts = line.Split('|');
 
-                    // Check if this belongs to user
                     if (parts.Length >= 4 && parts[0] == currentLoggedInUser)
                     {
-                        Console.WriteLine($"Donor : {parts[1]}");
-                        Console.WriteLine($"Type  : {parts[2]}");
-                        Console.WriteLine($"Status: {parts[3]}");
+                        hasRequests = true;
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"{Dpad}╔══════════════════════════════════════╗");
+                        Console.WriteLine($"{Dpad}║ Donor  : {parts[1],-28}║");
+                        Console.WriteLine($"{Dpad}║ Type   : {parts[2],-28}║");
+                        Console.WriteLine($"{Dpad}║ Status : {parts[3],-28}║");
+
                         if (parts.Length >= 5)
                         {
-                            Console.WriteLine($"Message: {parts[4]}");
+                            Console.WriteLine($"{Dpad}╠══════════════════════════════════════╣");
+                            Console.WriteLine($"{Dpad}  Message:                            ");
+                            Console.WriteLine($"{Dpad} {parts[4],-36} ║");
                         }
-                        Console.WriteLine("--------------------");
+
+                        Console.WriteLine($"{Dpad}╚══════════════════════════════════════╝");
+                        Console.ResetColor();
+                        Console.WriteLine();
+
+                        // Load already-read notifications
+                        List<string> readEntries = new List<string>();
+
+                        if (File.Exists(ReadNotificationsFilePath))
+                        {
+                            readEntries = File.ReadAllLines(ReadNotificationsFilePath).ToList();
+                        }
+
+                        // Save notification only if it hasn't been saved before
+                        if (!readEntries.Contains(line))
+                        {
+                            File.AppendAllText(ReadNotificationsFilePath, line + Environment.NewLine);
+                        }
                     }
                 }
             }
-            else
+
+            if (!hasRequests)
             {
-                Console.WriteLine("No requests have been completed yet.");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{Dpad}No accomplished requests found.");
+                Console.ResetColor();
             }
 
-            if (File.Exists(AccomplishedFilePath))
-            {
-                foreach (string line in File.ReadAllLines(AccomplishedFilePath))
-                {
-                    string[] parts = line.Split('|');
-
-                    if (parts.Length >= 4 && parts[0] == currentLoggedInUser)
-                    {
-                        File.AppendAllText(ReadNotificationsFilePath, line + Environment.NewLine);
-                    }
-                }
-            }
-
-            Console.WriteLine("\nPress any key to return...");
+            Console.WriteLine($"\n{Dpad}Press any key to return...");
             Console.ReadKey();
         }
         static string Rankings(int points)
@@ -893,7 +1074,7 @@ namespace FinalsProg_DSA_HCI
 
             if (points >= 80)
             {
-                achievements.Add("Fellow Voluntees");
+                achievements.Add("Fellow Volunteers");
             }
 
             if (points >= 100)
@@ -946,45 +1127,87 @@ namespace FinalsProg_DSA_HCI
         static void ExecuteProfile()
         {
             Console.Clear();
-
             int points = int.Parse(userDatabase[currentLoggedInUser][1]);
+            List<string> unlocked = GetAchievements(points);
 
-            Console.WriteLine("=== DONOR PROFILE ===");
-            Console.WriteLine($"Username : {currentLoggedInUser}");
-            Console.WriteLine($"Points   : {points}");
-            Console.WriteLine($"Badge    : {Rankings(points)}");
+           
+            Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
+            Console.WriteLine($"{Dpad}║            USER PROFILE            ║");
+            Console.WriteLine($"{Dpad}╠════════════════════════════════════╣");
+          
 
-            Console.WriteLine("\nAchievements:");
+            Console.WriteLine($"{Dpad} Username : {currentLoggedInUser}");
+            Console.WriteLine($"{Dpad} Points   : {points}");
+            Console.WriteLine($"{Dpad} Rank     : {Rankings(points)}");
 
-            foreach (string achievement in GetAchievements(points))
+          
+            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
+            
+            Console.WriteLine($"{Dpad}Press any key to return");
+            Console.WriteLine();
+
+            // ACHIEVEMENTS SECTION HEADER
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
+            Console.WriteLine($"{Dpad}║           ACHIEVEMENTS             ║");
+            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
+            Console.ResetColor();
+
+            if (unlocked.Count == 0)
             {
-                Console.WriteLine($"✓ {achievement}");
+                Console.WriteLine($"{Dpad}No achievements unlocked yet.");
+            }
+            else
+            {
+                foreach (string achievement in GetAchievements(points))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{Dpad} ✓ {achievement}");
+                    Console.ResetColor();
+                }
             }
 
-            Console.WriteLine("\n=== RANK TIERS ===");
-            Console.WriteLine("Bronze Donor   - 0 Points");
-            Console.WriteLine("Silver Donor   - 50 Points");
-            Console.WriteLine("Gold Donor     - 100 Points");
-            Console.WriteLine("Platinum Donor - 200 Points");
-            Console.WriteLine("Emerald Donor  - 500 Points");
-            Console.WriteLine("Diamond Donor  - 1000 Points");
-            Console.WriteLine("Global Donor   - 2000 Points\n\n");
+            Console.WriteLine();
+
+            // RANK TIERS HEADER
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
+            Console.WriteLine($"{Dpad}║            RANK TIERS              ║");
+            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
+            Console.ResetColor();
+
+            Console.WriteLine($"{Dpad}Bronze Donor   - 0 Points");
+            Console.WriteLine($"{Dpad}Silver Donor   - 50 Points");
+            Console.WriteLine($"{Dpad}Gold Donor     - 100 Points");
+            Console.WriteLine($"{Dpad}Platinum Donor - 200 Points");
+            Console.WriteLine($"{Dpad}Emerald Donor  - 500 Points");
+            Console.WriteLine($"{Dpad}Diamond Donor  - 1000 Points");
+            Console.WriteLine($"{Dpad}Global Donor   - 2000 Points");
+
+            Console.WriteLine();
+
+            // FULL ACHIEVEMENT LIST
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{Dpad}╔════════════════════════════════════╗");
+            Console.WriteLine($"{Dpad}║        ALL ACHIEVEMENTS            ║");
+            Console.WriteLine($"{Dpad}╚════════════════════════════════════╝");
+            Console.ResetColor();
 
             string[] achievements =
-                {
-                        "First Donation|10",
-                        "Helping Hand|50",
-                        "Fellow Volunteers|80",
-                        "Community Helper|100",
-                        "Contributor to the Need|200",
-                        "The Benefactor|300",
-                        "A Patron to Society|400",
-                        "The Philanthropist|500",
-                        "The Altruistic Friend|650",
-                        "The Helping Champion|800",
-                        "Mr Beast|1000",
-                        "Greatest of All Time|1500"
-                    };
+            {
+                            "First Donation|10",
+                            "Helping Hand|50",
+                            "Fellow Volunteers|80",
+                            "Community Helper|100",
+                            "Contributor to the Need|200",
+                            "The Benefactor|300",
+                            "A Patron to Society|400",
+                            "The Philanthropist|500",
+                            "The Altruistic Friend|650",
+                            "The Helping Champion|800",
+                            "Mr Beast|1000",
+                            "Greatest of All Time|1500"
+            };
 
             foreach (string achievement in achievements)
             {
@@ -994,42 +1217,67 @@ namespace FinalsProg_DSA_HCI
 
                 string status = points >= requiredPoints ? "[UNLOCKED]" : "[LOCKED]";
 
-                Console.WriteLine($"{status,-11} {name} ({requiredPoints} pts)");
+                Console.WriteLine($"{Dpad}{status,-12} {name} ({requiredPoints} pts)");
             }
-
-
             Console.ReadKey();
         }
         static void DeleteRequests(List<string> RequestListmaker)
         {
             Console.Clear();
-            Console.WriteLine("Choose a request you made that you want to remove:");
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine($"{Dpad} User: {currentLoggedInUser} | Points: {userDatabase[currentLoggedInUser][1]}");
+            Console.ResetColor();
+            Console.WriteLine($"{Dpad}   =================================");
+            Console.WriteLine($"{Dpad}         DELETE A REQUEST         ");
+            Console.WriteLine($"{Dpad}   =================================");
+            Console.WriteLine($"{Dpad}Choose a request you made that you want to remove:");
 
             List<int> userRequestIndexes = new List<int>();
 
             for (int i = 0; i < RequestListmaker.Count; i++)
             {
+                string cleanRequest = RequestListmaker[i].Replace("=========================", "").Trim();
                 string[] ticketLines = RequestListmaker[i].Split('\n');
 
-                if (ticketLines.Length > 0 &&
-                    ticketLines[0].Contains("Posted by:") &&
-                    ticketLines[0].Replace("Posted by:", "").Trim() == currentLoggedInUser)
+                string postedBy = "";
+
+                foreach (string line in ticketLines)
+                {
+                    if (line.StartsWith("Posted by:"))
+                    {
+                        postedBy = line.Replace("Posted by:", "").Trim();
+                        break;
+                    }
+                }
+
+                if (postedBy == currentLoggedInUser)
                 {
                     userRequestIndexes.Add(i);
 
-                    Console.WriteLine($"\nRequest #{userRequestIndexes.Count}");
-                    Console.WriteLine(RequestListmaker[i]);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine($"{Dpad}╔═══════════════════════════════════════╗");
+                    Console.WriteLine($"{Dpad} REQUEST #{userRequestIndexes.Count}");
+                    Console.WriteLine($"{Dpad}╠═══════════════════════════════════════╣");
+
+                    foreach (string line in cleanRequest.Split('\n'))
+                    {
+                        Console.WriteLine($"{Dpad}{line}");
+                    }
+
+                    Console.WriteLine($"{Dpad}╚═══════════════════════════════════════╝");
+                    Console.WriteLine();
+                    Console.ResetColor();
                 }
             }
 
             if (userRequestIndexes.Count == 0)
             {
-                Console.WriteLine("\nYou have no requests to delete.");
+                Console.WriteLine($"\n{Dpad}You have no requests to delete.");
                 Console.ReadKey();
                 return;
             }
 
-            Console.Write("\nEnter request number to delete (0 to cancel): ");
+            Console.Write($"\n{Dpad}Enter request number to delete (0 to cancel): ");
 
             try
             {
@@ -1043,7 +1291,7 @@ namespace FinalsProg_DSA_HCI
                 if (choice < 1 || choice > userRequestIndexes.Count)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("\nInvalid selection.");
+                    Console.WriteLine($"{Dpad}\nInvalid selection.");
                     Console.ResetColor();
                     Console.ReadKey();
                     return;
@@ -1055,31 +1303,96 @@ namespace FinalsProg_DSA_HCI
                 RequestListmaker.RemoveAt(targetIndex);
 
                 // Rewrite requests file
+
                 File.WriteAllText(RequestsFilePath, "");
 
                 foreach (string ticket in RequestListmaker)
                 {
-                    File.AppendAllText(RequestsFilePath,
-                        ticket + "=========================\n");
+                    File.AppendAllText(
+                        RequestsFilePath,
+                        ticket.TrimEnd() +
+                        Environment.NewLine +
+                        "=========================" +
+                        Environment.NewLine);
                 }
 
-                Console.WriteLine("\nRequest deleted successfully.");
+                Console.WriteLine($"\n{Dpad}Request deleted successfully.");
             }
             catch (Exception)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("\nInvalid input. Expected a valid number entry.");
+                Console.WriteLine($"\n{Dpad}Invalid input. Expected a valid number entry.");
                 Console.ResetColor();
             }
 
-            Console.WriteLine("\nPress any key to return...");
+            Console.WriteLine($"\n{Dpad}Press any key to return...");
             Console.ReadKey();
+        }
+
+        //Helper methods
+        static string ReadPassword()
+        {
+            string password = "";
+            ConsoleKeyInfo key;
+
+            do
+            {
+                key = Console.ReadKey(true);
+
+                // Ignore Enter
+                if (key.Key == ConsoleKey.Enter)
+                    break;
+
+                // Handle Backspace
+                if (key.Key == ConsoleKey.Backspace)
+                {
+                    if (password.Length > 0)
+                    {
+                        password = password.Substring(0, password.Length - 1);
+                        Console.Write("\b \b");
+                    }
+                }
+                else
+                {
+                    password += key.KeyChar;
+                    Console.Write("*");
+                }
+
+            } while (true);
+
+            Console.WriteLine();
+            return password;
+        }
+        static void PrintWrapped(string prefix, string text, int width)
+        {
+            while (text.Length > width)
+            {
+                Console.WriteLine($"{Dpad}{prefix}{text.Substring(0, width)}");
+                text = text.Substring(width);
+                prefix = ""; // Indent next lines
+            }
+
+            Console.WriteLine($"{Dpad}{prefix}{text}");
+        }
+        static void PrintRequest(string request)
+        {
+            foreach (string line in request.Split('\n'))
+            {
+                if (line.StartsWith("Title: "))
+                {
+                    PrintWrapped("Title: ", line.Substring(7), 50);
+                }
+
+                else if (line.StartsWith("Description: "))
+                {
+                    PrintWrapped("Description: ", line.Substring(13), 50);
+                }
+
+                else
+                {
+                    Console.WriteLine($"{Dpad}{line}");
+                }
+            }
         }
     }
 }
-
-
-
-
-
-
